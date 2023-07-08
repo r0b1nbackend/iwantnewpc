@@ -1,10 +1,15 @@
-from pydantic import BaseModel
-from typing import List
+from fastapi import Form
+from pydantic import BaseModel,EmailStr
+from typing import List,Optional
 
 
 class Todo(BaseModel):
-    id:int
-    item:str
+    id: Optional[int]
+    item: str
+
+    @classmethod
+    def as_form(cls,item:str = Form(...)):
+        return cls(item = item)
 
     class Config:
         Schema_extra = {
@@ -16,8 +21,10 @@ class Todo(BaseModel):
 
 
 class TodoItem(BaseModel):
+    item: str
+
     class Config:
-        Schema_extra = {
+        schema_extra = {
             "example":{
                 "item":"Read the next chapter of the book"
             }
@@ -25,9 +32,10 @@ class TodoItem(BaseModel):
 
 
 class TodoItems(BaseModel):
-    todos:List[TodoItem]
+    todos: List[TodoItem]
+
     class Config:
-        schema_extra = {
+        Schema_extra = {
             "example":{
                 "todos":[
                     {
